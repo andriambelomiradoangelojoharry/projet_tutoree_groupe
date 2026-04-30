@@ -1,0 +1,64 @@
+<!-- templates/base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    {% load static %}
+    <title>
+      Bibliothèque |{% block title %}
+
+      {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  </head>
+  <body>
+    <header class="d-flex align-self-center justify-content-between">
+      <p>Logo</p>
+      <p>Gestionnaire de bibliothèque</p>
+      <a href="{% url 'seDeconnecter' %}" class="btn btn-danger">Se deconnecter</a>
+    </header>
+    <hr />
+    <section class="row">
+      <div class="card col-4">
+        <h3>Toal livre</h3>
+        <p>29</p>
+        <p>7 titres différents</p>
+      </div>
+      <div class="card col-4">
+        <h3>Adhérents</h3>
+        <p>5 membres actifs</p>
+      </div>
+      <div class="card col-4">
+        <h3>Emprunts en cours</h3>
+        <p>3 Non retounés</p>
+      </div>
+    </section>
+    <hr />
+    <nav>
+      <ul class="d-flex gap-4">
+        <li>
+          <a href="{% url 'indexDashboard' %}">Statistiques</a>
+        </li>
+        <li>
+          <a href="#">Adhérents</a>
+        </li>
+        <li>
+          <a href="{% url 'listeEmprunt' %}">Emprunts</a>
+        </li>
+        <li>
+          <a href="#">Livre</a>
+        </li>
+      </ul>
+    </nav>
+    <main>
+      {% block content %}
+        <!-- Mitsofoka eto le template miheriter anty template de base ty -->
+      {% endblock %}
+    </main>
+
+    <footer>
+      <p>© 2026 Projet tutoré ASJA</p>
+    </footer>
+  </body>
+</html>
