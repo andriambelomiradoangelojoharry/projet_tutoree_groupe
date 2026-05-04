@@ -20,7 +20,7 @@ def enregistrer_emprunt(request):
     if request.method == "POST":
         form = EmpruntForm(request.POST)
         if form.is_valid():
-            #On enrregistre pas directement les données , on les stocke dans une variable emprunt
+            #On enregistre pas directement les données , on les stocke dans une variable emprunt
             emprunt = form.save(commit=False)
             #on recupere l'objet livre correspondat au réference selectionné
             livre = get_object_or_404(Livre, reference = emprunt.ref_livre.reference)
@@ -53,10 +53,17 @@ def retourner_emprunt(request, id):
     emprunt = get_object_or_404(Emprunt, id=id)
     if request.method == "POST":
         form = EnregistrementRetourEmprunt(request.POST, instance=emprunt)
-        
+        if form.is_valid():
+            emprunt = form.save(commit=False)
+            emprunt.statut = "Retourné"#On met à jour le statut
+            emprunt.save()#On enreistre le changement
+            return redirect('listeEmprunt')
+        else:
+            return HttpResponse("Formulaire invalide")
     else:
         form = EnregistrementRetourEmprunt(instance=emprunt)
         return render(request, "emprunts/retour_emprunt.html", {
             'form' : form,
-            'emprunt' : emprunt
+            'emprunt' : emprunt#Données concernant l'emprunt
         })
+
