@@ -1,4 +1,5 @@
-from django.shortcuts import render , redirect
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render , redirect
 from .models import Livre
 from .forms import LivreForm
 
@@ -21,3 +22,23 @@ def recherche(request) :
         'livres' : livres
     }
     #return render (request, 'resultat_recherche.html', context)
+
+
+def modifier_livres(request , ref) :
+    livre = get_object_or_404(Livre , pk=ref)
+    form = LivreForm(request.POST or None , instance=livre)
+    if form.is_valid() :
+        form.save()
+        return redirect('liste_livre')
+    return render(request , 'livres/modifier_livre.html' , {'form': form})
+
+
+def supprimer_livres(request , ref) :
+    livre = get_object_or_404(Livre , pk=ref)
+    if request.method == 'POST' :
+        livre.delete()
+        return redirect('liste_livre')
+    else:
+        return render(request, 'livres/confirmation_suppression.html', {
+            'livre' : livre
+        })
