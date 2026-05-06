@@ -46,7 +46,13 @@ class Reservation(models.Model):
     date_validation = models.DateField(null=True, blank=True)
 
 
+    def __str__(self):
+        return f"{self.pk}"
+
+
 class DetailReservation(models.Model):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE, related_name='ligneReservation')
-    livre = models.ForeignKey(Livre, on_delete=models.CASCADE)
+    livre = models.ForeignKey(Livre, on_delete=models.CASCADE, limit_choices_to={
+        'quantite__gt': 0
+    })
     quantite = models.PositiveIntegerField(default=1)

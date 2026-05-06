@@ -19,10 +19,11 @@ def dashboard_stats(request):
     #Totals adhérents
     total_adherents = Adherent.objects.count()
     #Membres actifs
-    #emprunt__statut = requette join Adherent --> Emprunt --> statut
+    #emprunt__statut = requette join Adherent --> Reservation --> Emprunt --> statut
     # .distinct() evite le doublons
-    membres_actifs = Adherent.objects.filter(emprunt__statut='Non retourné').distinct().count()
-    print(membres_actifs)
+    #Adherent qui à un emprunt en cours
+    membres_actifs = Adherent.objects.filter(reservation__emprunt__statut='Non retourné').distinct().count()
+    
 
     #Emprunts en cours
     #Filtration des emprunts avec attribus statut = 'Non retourné

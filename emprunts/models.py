@@ -11,7 +11,6 @@ STATUT = [
     ('Non retourné', 'Non retourné')
 ]
 class Emprunt(models.Model):
-    #
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
     bibliothecaire = models.ForeignKey(User,on_delete=models.CASCADE)
     date_emprunt = models.DateField(auto_now_add=True)

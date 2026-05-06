@@ -140,7 +140,7 @@ DetailReservationInlineFormSet = inlineformset_factory(
     DetailReservation,#Modèle enfant
     fields = ['livre', 'quantite'],#Les champs à remplir
     widgets={
-        'livre' : forms.TextInput(attrs={
+        'livre' : forms.Select(attrs={
             'class' : 'form-control'
         }),
         'quantite' : forms.NumberInput(attrs={
