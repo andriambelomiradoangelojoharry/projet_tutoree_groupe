@@ -139,6 +139,14 @@ DetailReservationInlineFormSet = inlineformset_factory(
     Reservation,#Modele parent
     DetailReservation,#Modèle enfant
     fields = ['livre', 'quantite'],#Les champs à remplir
+    widgets={
+        'livre' : forms.TextInput(attrs={
+            'class' : 'form-control'
+        }),
+        'quantite' : forms.NumberInput(attrs={
+            'class' : 'form-control'
+        })
+    },
     extra=1,#Le nombre des formulaires enfant
     can_delete=False,#On peut  supprime le formulaire enfant
     formset=DetailReservationFormSet#On précise le formset utilisé
