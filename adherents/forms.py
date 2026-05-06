@@ -130,7 +130,7 @@ DetailReservationInlineFormSet = inlineformset_factory(
     Reservation,#Modele parent
     DetailReservation,#Modèle enfant
     fields = ['livre', 'quantite'],#Les champs à remplir
-    extra=2,#Le nombre des formulaires enfant
-    can_delete=True,#On peut  supprime le formulaire enfant
+    extra=1,#Le nombre des formulaires enfant
+    can_delete=False,#On peut  supprime le formulaire enfant
     formset=DetailReservationFormSet#On précise le formset utilisé
 )
