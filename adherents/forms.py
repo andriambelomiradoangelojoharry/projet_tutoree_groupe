@@ -1,5 +1,6 @@
 from django import forms
-from .models import Adherent, CompteAdherent
+from .models import Adherent, CompteAdherent, Reservation, DetailReservation
+from django.forms import BaseInlineFormSet, ValidationError, inlineformset_factory
 
 class FormulaireAjoutAdherent(forms.ModelForm):
     class Meta:
@@ -81,3 +82,34 @@ class VerificationParEmail(forms.Form):
         email = cleaned_data.get('email')
 
         return cleaned_data
+
+
+class FormulalireReservation(forms.ModelForm):
+    class Meta:
+        model = Reservation
+        fields = '__all__'
+        
+
+class DetailReservationFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        if any(self.errors):
+            return
+        livre_deja_ajoutee = set()
+        for form in self.forms:
+            if form.cleaned_data and not form.cleaned_data.get("DELETE", False):
+                livre_reserver = form.cleaned_data.get('livre')
+                if livre_reserver in livre_deja_ajoutee:
+                    raise ValidationError(
+                        "Vous avez ajouté le même livre plusieurs fois"
+                    )
+                livre_deja_ajoutee.add(livre_reserver)
+    
+DetailReservationInlineFormSet = inlineformset_factory(
+    Reservation,
+    DetailReservation,
+    fields = '__all__',
+    extra=1,
+    can_delete=False,
+    formset=DetailReservationFormSet
+)
