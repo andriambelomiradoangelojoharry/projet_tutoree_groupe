@@ -153,3 +153,10 @@ def valider_reservation(request, id):
             bibliothecaire = request.user
         )
     return redirect('listeReservationAValidee')
+
+
+def mes_emprunts(request):
+    emprunts = Emprunt.objects.filter(reservation__adherent__compteadherent__user=request.user)
+    return render(request, "tableau_de_bord/mes_emprunts.html", {
+        'emprunts' : emprunts
+    })
