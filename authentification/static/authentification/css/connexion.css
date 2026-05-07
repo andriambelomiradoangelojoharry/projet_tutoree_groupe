@@ -1,0 +1,15 @@
+.space{
+    padding: 12px; 
+   
+}
+
+.bg-primary{
+    border-radius: 0.5rem;
+    
+}
+.d-flex{
+    position: fixed;
+    display: flex;
+    left: 20%;
+    top: 20%;
+}
