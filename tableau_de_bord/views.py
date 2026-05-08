@@ -7,7 +7,7 @@ from livres.models import Livre
 from adherents.models import Adherent, Reservation
 from emprunts.models import Emprunt
 from django.db.models import F, Avg, DurationField, ExpressionWrapper, Sum, Count
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth, TruncDate
 from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
@@ -62,6 +62,16 @@ def index_dashboard(request):
     )
 
 
+    emprunt_journalier = (
+        Emprunt.objects
+        .values('date_emprunt')
+        .annotate(total=Count('id'))
+        .order_by('date_emprunt')
+    )
+
+    labels_emprunt_journalier = [e['date_emprunt'].strftime('%d/%m/%y') for e in emprunt_journalier]
+    data_emprunt_journalier = [e['total'] for e in emprunt_journalier]
+    
     #Formatage pour le graphe emprunts/retours par mois
     #Formater les données pour faciliter leurs utilisation dans le graphe
     labels_emprunt_mois = []#Variable pour stocker les labels ['janvier', 'fevrier', ....]
@@ -124,6 +134,8 @@ def index_dashboard(request):
         'retours_data' : json.dumps(retours_data),
         'labels_emprunt_categorie' : json.dumps(labels_emprunt_categorie),
         'data_emprunt_categorie' : json.dumps(data_emprunt_categorie),
+        'labels_emprunt_journalier' : json.dumps(labels_emprunt_journalier),
+        'data_emprunt_journalier' : json.dumps(data_emprunt_journalier),
         'taux_de_retour' : taux_de_retour,
         'duree_moyenne' : duree_moyenne,
         'categorie_populaire' : categorie_populaire,
