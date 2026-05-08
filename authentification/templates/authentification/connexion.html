@@ -13,15 +13,17 @@
       <div class="col-lg-5 col-md-7">
         <div class="card card-soft shadow-sm border-0">
           <div class="card-body p-5">
-            <h2 class="card-title mb-3">Connexion</h2>
-            <img src="{% static 'icone/livre_01.png' %}" alt="" width="20" height="20" />
+            <div class="d-flex align-items-center justify-content-center">
+              <h2 class="card-title mb-3 text-muted-soft">Connexion</h2>
+            </div>
+
             <p class="text-muted-soft mb-4">Accédez à votre espace adhérent ou bibliothécaire.</p>
 
             <form method="post" class="row g-3">
               {% csrf_token %}
-              <div class="col-12">{{ form.username.label_tag }}
+              <div class="col-12 text-muted-soft">{{ form.username.label_tag }}
                 {{ form.username }}</div>
-              <div class="col-12">{{ form.password.label_tag }}
+              <div class="col-12 text-muted-soft">{{ form.password.label_tag }}
                 {{ form.password }}</div>
               <div class="col-12 d-flex justify-content-between align-items-center">
                 <a class="link-primary" href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
