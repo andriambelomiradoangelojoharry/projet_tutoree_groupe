@@ -22,39 +22,30 @@
       if (!message) return
     
       // Afficher message utilisateur
-      chatbox.innerHTML += `
-                <div class="message user">
-                    <p>${message}</p>
-                </div>`
+      chatbox.innerHTML += `<div class="d-flex justify-content-end"><div class="message user alert alert-secondary"><p>${message}</p></div></div>`
     
       input.value = ''
       chatbox.scrollTop = chatbox.scrollHeight
     
       // Afficher indicateur de chargement
-      chatbox.innerHTML += `
-                <div class="message bot" id="loading">
-                    <p>...</p>
-                </div>`
+      chatbox.innerHTML += `<div class="message bot" id="loading"><p>...</p></div>`
     
-      // Envoyer à Django
+      // Envoyer à Django le message avec une fonction asynchrone
       const response = await fetch("{% url 'chatbot' %}", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({ message: message })
+        }, //Ajout token csrf pour éviter l'erreur
+        body: JSON.stringify({ message: message }) //Message à envoyé au format json
       })
     
-      const data = await response.json()
+      const data = await response.json() //Stockage reponse dans une variable
     
       // Supprimer chargement et afficher réponse
       document.getElementById('loading').remove()
     
-      chatbox.innerHTML += `
-                <div class="message bot">
-                    <p>🤖 ${data.response}</p>
-                </div>`
+      chatbox.innerHTML += `<div class="message bot"><p>🤖 ${data.response}</p></div>`
     
       chatbox.scrollTop = chatbox.scrollHeight
     }
@@ -70,12 +61,14 @@
       const data = await response.json()
       const chatbox = document.getElementById('chatbox')
     
+      // On itère l'historique du message
       data.historique.forEach((item) => {
-        chatbox.innerHTML += item.role === 'user' ? `<div class="message user"><p>${item.message}</p></div>` : `<div class="message bot"><p>🤖 ${item.message}</p></div>`
+        chatbox.innerHTML += item.role === 'user' ? `<div class="d-flex justify-content-end"><div class="message user alert alert-secondary"><p>${item.message}</p></div></div>` : `<div class="message bot alert alert-light"><p>🤖 ${item.message}</p></div>`
       })
       chatbox.scrollTop = chatbox.scrollHeight
     }
     
+    //On recharge l'historique à chaque chargment de la page
     document.addEventListener('DOMContentLoaded', chargerHistorique)
   </script>
 {% endblock %}

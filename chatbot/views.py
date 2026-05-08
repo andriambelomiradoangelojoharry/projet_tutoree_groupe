@@ -10,11 +10,15 @@ from emprunts.models import Emprunt
 from decouple import config
 from .models import HistoriqueChat
 
+
+#Récupération de toutes les données nécessaires 
 def get_context_bibliotheque(adherent):
-    reservations = Reservation.objects.filter(
+    #Données concernant les réservations et détails réservations
+    reservations = Reservation.objects.prefetch_related('ligneReservation').filter(
         adherent=adherent
     ).values('statut','date_reservation')
 
+    #DOnnées concernant l'emprunt
     emprunts = Emprunt.objects.filter(
         reservation__adherent=adherent,
         statut='Non retourné'
@@ -23,8 +27,10 @@ def get_context_bibliotheque(adherent):
         'date_limite'
     )
 
+    # Liste de toutes les livres 
     livres = Livre.objects.values('titre','auteur','categorie','quantite')
 
+    # On retourne une chaîne de caractère qui contient le requête à envoyé au client GROK
     return f"""
     Tu es un assistant pour une bibliothèque universitaire.
     Tu aides l'adhérent {adherent.nom} {adherent.prenom}.
@@ -44,12 +50,13 @@ def get_context_bibliotheque(adherent):
     - Sois poli et concis
     """
 
+
 @csrf_exempt
 def chatbot(request):
     if request.method == 'POST':
         data     = json.loads(request.body)
-        question = data.get('message', '')
-        adherent = request.user.compteadherent.personne
+        question = data.get('message', '')#Récupération du message
+        adherent = request.user.compteadherent.personne#Récuperation de l'adherent connecté
 
         #Sauvegarder message utilisateur
         HistoriqueChat.objects.create(
@@ -62,6 +69,7 @@ def chatbot(request):
         historique = HistoriqueChat.objects.filter(
             adherent=adherent
         ).order_by('-date')[:10][::-1]
+        #::-1 renverser l'ordre de l'historique
 
         # Construire les messages pour Groq
         messages = [
@@ -105,4 +113,5 @@ def charger_historique(request):
         {'role': h.role, 'message': h.message, 'date': str(h.date)}
         for h in historique
     ]
+    #Revoie données au format json à recupérer au template chatbot/chat.html
     return JsonResponse({'historique': data})
