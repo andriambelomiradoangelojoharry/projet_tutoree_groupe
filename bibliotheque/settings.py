@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'emprunts',
     'livres',
     'adherents',
-    'import_export'
+    'import_export',
+    'chatbot',
 ]
 
 MIDDLEWARE = [
@@ -138,7 +139,12 @@ LOGOUT_REDIRECT_URL = '/'
 
 
 EMAIL_BACKEND = config('EMAIL_BACKEND')
-
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD  = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 
 #on execute chaque jour à 8h00

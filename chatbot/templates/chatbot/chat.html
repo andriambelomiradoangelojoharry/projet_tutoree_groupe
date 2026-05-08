@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="chat-container">
+    <div id="chatbox"></div>
+
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Posez votre question..." />
+      <button onclick="envoyerMessage()">Envoyer</button>
+    </div>
+  </div>
+
+  <script>
+    // Historique des messages
+    let historique = []
+    
+    async function envoyerMessage() {
+      const input = document.getElementById('userInput')
+      const chatbox = document.getElementById('chatbox')
+      const message = input.value.trim()
+    
+      if (!message) return
+    
+      // Afficher message utilisateur
+      chatbox.innerHTML += `
+                <div class="message user">
+                    <p>${message}</p>
+                </div>`
+    
+      input.value = ''
+      chatbox.scrollTop = chatbox.scrollHeight
+    
+      // Afficher indicateur de chargement
+      chatbox.innerHTML += `
+                <div class="message bot" id="loading">
+                    <p>...</p>
+                </div>`
+    
+      // Envoyer à Django
+      const response = await fetch("{% url 'chatbot' %}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ message: message })
+      })
+    
+      const data = await response.json()
+    
+      // Supprimer chargement et afficher réponse
+      document.getElementById('loading').remove()
+    
+      chatbox.innerHTML += `
+                <div class="message bot">
+                    <p>🤖 ${data.response}</p>
+                </div>`
+    
+      chatbox.scrollTop = chatbox.scrollHeight
+    }
+    
+    // Envoyer avec Entrée
+    document.getElementById('userInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') envoyerMessage()
+    })
+    
+    // Charger l'historique depuis la BDD
+    async function chargerHistorique() {
+      const response = await fetch("{% url 'chargerHistorique' %}")
+      const data = await response.json()
+      const chatbox = document.getElementById('chatbox')
+    
+      data.historique.forEach((item) => {
+        chatbox.innerHTML += item.role === 'user' ? `<div class="message user"><p>${item.message}</p></div>` : `<div class="message bot"><p>🤖 ${item.message}</p></div>`
+      })
+      chatbox.scrollTop = chatbox.scrollHeight
+    }
+    
+    document.addEventListener('DOMContentLoaded', chargerHistorique)
+  </script>
+{% endblock %}
