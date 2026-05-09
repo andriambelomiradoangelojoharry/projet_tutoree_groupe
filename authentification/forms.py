@@ -1,11 +1,11 @@
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django import forms
-
+from django.utils.translation import gettext_lazy as _
 
 #Créer une formulaire d'authentification qui hérite de AuthenticationForm
 class FormulaireAuthentification(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
-        'placeholder' : 'ex: john_doe',
+        'placeholder' : 'Entrez votre nom d\'utilisateur ici',
        
         'class' : 'form-control'
     }),label="Nom d'utilisateur")
@@ -13,3 +13,12 @@ class FormulaireAuthentification(AuthenticationForm):
         'class' : 'form-control',
         'placeholder' : 'Entrez votre mots de passe'
     }), label="Mots de passe")
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Personnalisation du label du champ
+        self.fields['new_password1'].label = "Choisissez votre nouveau secret"
+        # Personnalisation de l'aide en dessous
+        self.fields['new_password1'].help_text = "Évitez le nom de votre chat !"

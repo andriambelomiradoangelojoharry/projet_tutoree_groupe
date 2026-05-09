@@ -58,7 +58,7 @@ def recherche(request):
         lookup_adherents =Q(nom__icontains=query)|Q(prenom__icontains=query)
         resultats_adherents=Adherent.objects.filter(lookup_adherents)
 
-        resultats_emprunts=Emprunt.objects.filter(Q(ref_livre__in=resultats_livres)|Q(adherent__in=resultats_adherents))
+        resultats_emprunts=Emprunt.objects.filter(Q(reservation__ligneReservation__livre__reference__in=resultats_livres)|Q(reservation__adherent__nom__in=resultats_adherents)|Q(reservation__adherent__prenom__in=resultats_adherents))
     context = {
         'emprunts':resultats_emprunts,
         'query' : query,
