@@ -6,6 +6,7 @@
 
 {% block content %}
   {% load static %}
+
   {% if request.user.is_authenticated %}
     <p>Bonjour, {{ request.user.username }}</p>
   {% else %}
@@ -21,10 +22,20 @@
 
             <form method="post" class="row g-3">
               {% csrf_token %}
-              <div class="col-12 text-muted-soft">{{ form.username.label_tag }}
-                {{ form.username }}</div>
-              <div class="col-12 text-muted-soft">{{ form.password.label_tag }}
-                {{ form.password }}</div>
+              <div class="col-12 text-muted-soft">
+                <div class="form-label text-center">{{ form.username.label_tag }}</div>
+                <div class="d-flex align-items-center">
+                  <img src="{% static 'icone/user-regular-full.svg' %}" alt="" width="30" height="30" class="icon" />
+                  {{ form.username }}
+                </div>
+              </div>
+              <div class="col-12 text-muted-soft">
+                <div class="form-label text-center">{{ form.password.label_tag }}</div>
+                <div class="d-flex align-items-center">
+                  <img src="{% static 'icone/key-solid-full.svg' %}" alt="" width="30" height="30" class="icon" />
+                  {{ form.password }}
+                </div>
+              </div>
               <div class="col-12 d-flex justify-content-between align-items-center">
                 <a class="link-primary" href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
                 <button type="submit" class="btn btn-primary">Se connecter</button>
@@ -48,4 +59,9 @@
       </div>
     </div>
   {% endif %}
+  <style>
+    .icon {
+      background-color: rgb(250, 250, 250);
+    }
+  </style>
 {% endblock %}

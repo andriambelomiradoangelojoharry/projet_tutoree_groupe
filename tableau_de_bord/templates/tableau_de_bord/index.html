@@ -26,14 +26,20 @@
       </div>
       <div class="col-lg-4">
         <div class="card card-soft p-4 h-100">
-          <h2 class="h5 mb-3">Évolution des emprunts</h2>
+          <h2 class="h5 mb-3">Évolution mensuel des emprunts</h2>
           <canvas id="evolution_emprunt"></canvas>
         </div>
       </div>
-      <div class="col-lg-12">
+      <div class="col-lg-6">
         <div class="card card-soft p-4 h-80">
           <h2 class="h5 mb-3">Emprunts par catégorie</h2>
           <canvas id="emprunt_par_categorie"></canvas>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card card-soft p-4 h-80">
+          <h2 class="h5 mb-3">Emprunts journalier</h2>
+          <canvas id="emprunt_journlier"></canvas>
         </div>
       </div>
     </div>
@@ -155,7 +161,7 @@
       data: {
         labels: {{ labels_livre_categorie | safe }},
         datasets: [{
-          label: 'Livre par catégorie',
+          label: 'Quantité en stock actuel',
           data: {{ data_livre_categorie | safe }},
           backgroundColor: '#2563eb',
           borderRadius: 12
@@ -229,6 +235,29 @@
           x: { beginAtZero: true, grid: { color: '#e2e8f0' } },
           y: { grid: { display: false } }
         }
+      }
+    });
+
+
+
+    new Chart(document.getElementById('emprunt_journlier'), {
+      type: 'line',
+      data: {
+        labels: {{ labels_emprunt_journalier | safe }},
+        datasets: [
+          {
+            label: 'Emprunts',
+            data: {{ data_emprunt_journalier | safe }},
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.15)',
+            tension: 0.35,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: { intersect: false }
       }
     });
   </script>
