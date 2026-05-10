@@ -7,6 +7,7 @@ urlpatterns = [
     path("ajouter/", adherent_views.ajouter_adherent, name="ajouterAdherent"),
     path("modifier/<str:id>/", adherent_views.modifier_adherent, name="modifierAdherent"),
     path("supprimer/<str:id>/", adherent_views.supprimer_adherent, name="supprimerAdherent"),
+    path("rechercher_adherent/", adherent_views.recherche, name="rechercheAdherent"),
     path("verification/", adherent_views.verification, name="verification"),
     path("inscription/", adherent_views.inscription, name="inscription"),
     path("reservation", adherent_views.reservation_avec_detail, name="reservation"),

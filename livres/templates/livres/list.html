@@ -5,16 +5,20 @@ Livres enregistrés
 {% endblock %}
 
 {% block content %}
+{% load static %}
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
   <form action="{% url 'rechercheLivre' %}" method="get" class="d-flex gap-2 w-100 w-md-auto">
     <input type="text" name="q" placeholder="Rechercher un livre..." class="form-control" />
-    <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+    <button type="submit" class="btn btn-outline-primary"><img src="{% static 'icone/loupe.png' %}" alt="Rechercher"
+        width="20" height="20" /></button>
   </form>
   {% if user_role.role == 'bibliothecaire' %}
-  <a href="{% url 'ajouter_livre' %}" class="btn btn-primary">Ajouter un livre</a>
   {% endif %}
 </div>
-
+<div class="text-center">
+  <a href="{% url 'ajouter_livre' %}" class="btn btn-primary rounded-pill w-50 m-4">Ajouter un
+    livre</a>
+</div>
 {% if query and nbre_resultat == 0 %}
 <div class="alert alert-info">
   Aucun résultat pour <strong>"{{ query }}"</strong>
@@ -23,7 +27,7 @@ Livres enregistrés
 <div class="card card-soft shadow-sm border-0">
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table align-middle">
+      <table class="table align-middle table-hover">
         <thead>
           <tr>
             <th>Référence</th>
@@ -46,8 +50,10 @@ Livres enregistrés
             <td>{{ livre.quantite }}</td>
             {% if user_role.role == 'bibliothecaire' %}
             <td class="d-flex gap-2">
-              <a href="{% url 'modifierLivre' livre.reference %}" class="btn btn-sm btn-success">Modifier</a>
-              <a href="{% url 'supprimerLivre' livre.reference %}" class="btn btn-sm btn-danger">Supprimer</a>
+              <a href="{% url 'modifierLivre' livre.reference %}" class="btn btn-sm" title="modifier"><img
+                  src="{% static 'icone/modifier.png' %}" alt="" width="20" height="20" /></a>
+              <a href="{% url 'supprimerLivre' livre.reference %}" class="btn btn-sm" title="supprimer"><img
+                  src="{% static 'icone/supprimer.png' %}" alt="" width="20" height="20" /></a>
             </td>
             {% endif %}
           </tr>

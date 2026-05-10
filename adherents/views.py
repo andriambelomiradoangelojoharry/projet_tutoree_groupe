@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Adherent, CompteAdherent, Reservation
 from .forms import FormulaireAjoutAdherent, FormulaireInscription, VerificationParEmail, FormulaireReservation, DetailReservationFormSet, DetailReservationInlineFormSet
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.core.mail import send_mail
 import random
 from django.conf import settings
@@ -54,7 +55,20 @@ def supprimer_adherent(request, id):
             'adherent' : adherent
         })
 
-
+def recherche(request) :
+    query = request.GET.get('q','').strip()
+    if not query:
+        return redirect('liste_livre')
+    else:
+        nbre_resultat = 0
+        adherent_lookup = Q(matricule__icontains=query) | Q(nom__icontains=query) | Q(prenom__icontains=query)|Q(fonctions__icontains=query) 
+        adherents =  Adherent.objects.filter(adherent_lookup)
+        context = {
+            'adherents' : adherents,
+            'nbre_resultat' : adherents.count(),
+            'query' : query
+        }
+        return render (request, 'adherents/liste_adherent.html', context)
 
 def verification(request):
     if request.method == "POST":
